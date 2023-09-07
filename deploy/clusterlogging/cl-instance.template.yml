@@ -57,7 +57,7 @@ objects:
           requests:
             memory: 4Gi
         storage:
-          size: 50G
+          size: 50Gi
           storageClassName: "${STORAGECLASS}"
       retentionPolicy:
         application:
