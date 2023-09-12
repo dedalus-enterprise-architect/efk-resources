@@ -2,11 +2,11 @@
 
 This project collects some procedures on how to Set Up a custom EFK instance having the following minimum requirements:
 
- * Cluster Logging Operator - community edition starting from version 5.4.0
+ * Cluster Logging Operator - community edition starting from version 5.7.0
 
- * Elasticsearch Operator - community edition starting from version 5.4.0
+ * Elasticsearch Operator - community edition starting from version 5.7.0
  
- * Openshift 4.9 or major
+ * Openshift 4.12 or higher
 
 References:
   - https://github.com/openshift/cluster-logging-operator
@@ -41,19 +41,21 @@ Explore the files used by this project:
 
 * A cluster admin roles rights
 
+* Git project local clone
+
 ### RedHat Elasticsearch Operator: setup
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-It runs the following command to install the RedHat Elasticsearch Operator:
+Run the following command to install the RedHat Elasticsearch Operator:
 
 ```
-   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/es-operator.yml
+   oc apply -f deploy/elasticsearch/es-operator.yml
 ```
 
 > Check Objects
 
-you can get a list of the previous created objects as follows:
+Get a list of the objects created:
 
 ```
    oc get all,ConfigMap,Secret,Elasticsearch,OperatorGroup,Subscription -l app=es-logging-dedalus --no-headers -n openshift-operators-redhat |cut -d' ' -f1
@@ -63,38 +65,31 @@ you can get a list of the previous created objects as follows:
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-It runs the following command to install the RedHat Openshift Logging Operator.
+Run the following command to install the RedHat Openshift Logging Operator:
 
 1. Instanciate the _Cluster Logging Operator_:
 
 ```
-   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/clusterlogging/cl-operator.yml -n openshift-logging
+   oc apply -f deploy/clusterlogging/cl-operator.yml -n openshift-logging
 ```
 
-2. Instanciate the _ClusterLogging_ instance by passing the parameters inline:
+2. Instanciate the _ClusterLogging_ instance with inline parameters:
 
 ```
-   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/clusterlogging/cl-instance.template.yml \
+   oc process -f deploy/clusterlogging/cl-instance.template.yml \
      -p STORAGECLASS=@type_here_the_custom_storageclass@ \
      | oc -n openshift-logging apply -f -
-```
-
-  where below is shown the command with the placeholder: '**@type_here_the_custom_storageclass@**' replaced by the value: 'gp2' and the others parameters have been omitted to load the default settings:
-
-```
-   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/clusterlogging/cl-instance.template.yml \
-     -p STORAGECLASS=gp2 | oc -n openshift-logging apply -f -
 ```
 
 3. Instanciate the _Cluster Forwarder_:
 
 ```
-   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
+   oc apply -f deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
 ```
 
 > Check Objects
 
-you can get a list of the previous created objects as follows:
+Get a list of the objects created:
 
 ```
    oc get all,ConfigMap,Secret,OperatorGroup,Subscription,ClusterLogging,ClusterLogForwarder \
@@ -105,17 +100,17 @@ you can get a list of the previous created objects as follows:
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-It runs the following command to create the External Console Link for Kibana default View:
+Run the following command to create the External Console Link for Kibana default View:
 
 ```
-   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/kibana/kibana-externallink.template.yml \
+   oc process -f deploy/kibana/kibana-externallink.template.yml \
      -p KIBANA_ROUTE=$(oc get route kibana -n openshift-logging -o jsonpath='{.spec.host}') \
      | oc -n openshift-logging apply -f -
 ```
 
 > Check Objects
 
-you can get a list of the previous created objects as follows:
+Get a list of the objects created:
 
 ```
    oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
@@ -123,13 +118,13 @@ you can get a list of the previous created objects as follows:
 
 ## Elasticsearch: Create the index template
 
-This step create the default index template:
+Create the default index template:
 
 ```bash
-curl -s https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh | bash
+. deploy/elasticsearch/index_explicit_mapping_template.sh
 ```
 
-if the command output successfull exit, it will be show somethings like as follow:
+If the command is successful, the output will be:
 
 ```json
 {"acknowledged":true}
