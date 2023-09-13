@@ -37,15 +37,18 @@ objects:
       logs:
         type: fluentd
         fluentd: {}
-        ## Uncomment if Infra nodes exist
+        ## Uncomment the following lines if Infra nodes exist
         # tolerations: 
         # - effect: NoExecute
         #   key: node-role.kubernetes.io/infra
         #   value: reserved
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved        
     logStore:
       elasticsearch:
         nodeCount: 3
-        ## Uncomment to move components to Infra nodes
+        ## Uncomment the following lines to move components to Infra nodes
         # nodeSelector: 
         #   node-role.kubernetes.io/infra: ''
         # tolerations:
@@ -86,7 +89,7 @@ objects:
     managementState: Managed
     visualization:
       kibana:
-        ## Uncomment to move components to Infra nodes
+        ## Uncomment the following lines to move components to Infra nodes
         # nodeSelector: 
         #   node-role.kubernetes.io/infra: ''
         # tolerations:
