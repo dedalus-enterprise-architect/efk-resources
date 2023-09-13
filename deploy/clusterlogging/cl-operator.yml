@@ -1,7 +1,8 @@
 #
 # =======================================
 # AUTHOR        : Claudio Prato @ Team EA
-# CREATE DATE   : 2022/06/14
+#               : Davide Celano @ Team EA
+# CREATE DATE   : 2023/09/12
 # PURPOSE       : Setup the RedHat Cluster Logging Operator
 # SPECIAL NOTES :
 # =======================================
@@ -64,4 +65,4 @@ spec:
   # Namespace of the catalog source. Use openshift-marketplace for the default OperatorHub catalog sources.
   sourceNamespace: openshift-marketplace
   # Set a specific version of an Operator CSV
-  # startingCSV: cluster-logging.5.4.1-24
+  startingCSV: cluster-logging.v5.7.5

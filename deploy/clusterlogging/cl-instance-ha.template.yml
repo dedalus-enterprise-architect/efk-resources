@@ -1,0 +1,109 @@
+#
+# =======================================
+# AUTHOR        : Claudio Prato @ Team EA
+#               : Davide Celano @ Team EA
+# CREATE DATE   : 2023/09/12
+# PURPOSE       : Setup the RedHat Cluster Logging Operator Instance object
+# SPECIAL NOTES :
+# =======================================
+#
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: dedalus-cl-template
+metadata:
+  annotations:
+    description: |-
+      Cluster Logging Instance definition (high-availability)
+      For more information about using this template, including OpenShift considerations, see https://github.com/dedalus-enterprise-architect/efk-resources/blob/main/README.md.
+    iconClass: icon-d4center
+    tags: dedalus-cl-instance,dedalus
+  name: dedalus-cl-instance
+objects:
+# :::
+# ::: Cluster Logging: Cluster Logging Instance with persistent storage
+# :::
+- apiVersion: logging.openshift.io/v1
+  kind: ClusterLogging
+  metadata:
+    name: instance
+    namespace: openshift-logging
+    # annotations:
+    #   template.alpha.openshift.io/wait-for-ready: "true"
+    labels:
+      app: cl-logging-dedalus
+  spec:
+    collection:
+      logs:
+        type: fluentd
+        fluentd: {}
+        ## Uncomment the following lines if Infra nodes exist
+        # tolerations: 
+        # - effect: NoExecute
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved        
+    logStore:
+      elasticsearch:
+        nodeCount: 3
+        ## Uncomment the following lines to move components to Infra nodes
+        # nodeSelector: 
+        #   node-role.kubernetes.io/infra: ''
+        # tolerations:
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved
+        # - effect: NoExecute
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved
+        proxy:
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 256Mi
+        # Specify a redundancy policy for the shards. The change is applied upon saving the changes.
+        #  - FullRedundancy: Elasticsearch fully replicates the primary shards for each index to every data node. This provides the highest safety, but at the cost of the highest amount of disk required and the poorest performance.
+        #  - MultipleRedundancy: Elasticsearch fully replicates the primary shards for each index to half of the data nodes. This provides a good tradeoff between safety and performance.
+        #  - SingleRedundancy: Elasticsearch makes one copy of the primary shards for each index. Logs are always available and recoverable as long as at least two data nodes exist. Better performance than MultipleRedundancy, when using 5 or more nodes. You cannot apply this policy on deployments of single Elasticsearch node.
+        #  - ZeroRedundancy: Elasticsearch does not make copies of the primary shards. Logs might be unavailable or lost in the event a node is down or fails. Use this mode when you are more concerned with performance than safety, or have implemented your own disk/PVC backup/restore strategy.
+        redundancyPolicy: SingleRedundancy
+        resources:
+          limits:
+            memory: 8Gi
+          requests:
+            memory: 8Gi
+        storage:
+          size: 50G
+          storageClassName: "${STORAGECLASS}"
+      retentionPolicy:
+        application:
+          maxAge: 7d
+        audit:
+          maxAge: 2d
+        infra:
+          maxAge: 2d
+      type: elasticsearch
+    managementState: Managed
+    visualization:
+      kibana:
+        ## Uncomment the following lines to move components to Infra nodes
+        # nodeSelector: 
+        #   node-role.kubernetes.io/infra: ''
+        # tolerations:
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved
+        # - effect: NoExecute
+        #   key: node-role.kubernetes.io/infra
+        #   value: reserved
+        replicas: 2
+      type: kibana
+parameters:
+- name: STORAGECLASS
+  displayName: Storage Class
+  description: Type the Storage Class available on the cluster
+  required: false
+  value: 
