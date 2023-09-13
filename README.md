@@ -1,10 +1,10 @@
-# Openshift Logging Resources
+# OpenShift Logging Resources
 
-This project collects some procedures on how to Set Up a custom EFK instance having the following minimum requirements:
+This project collects some procedures on how to setup a custom EFK instance based on the following minimum requirements:
 
- * RedHat Cluster Logging Operator - version 5.7.5
+ * RedHat OpenShift Cluster Logging Operator - version 5.7.5
 
- * RedHat Elasticsearch Operator - version 5.7.5
+ * RedHat ElasticSearch Operator - version 5.7.5
  
  * OpenShift 4.12 or higher
 
@@ -12,7 +12,7 @@ References:
   - https://github.com/openshift/cluster-logging-operator
   - https://github.com/openshift/elasticsearch-operator
 
-## Openshift Cluster Logging: Overview
+## OpenShift Cluster Logging: Overview
 
 This project focus on the following topics:
 
