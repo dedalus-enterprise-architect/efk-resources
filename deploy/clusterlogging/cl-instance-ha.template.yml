@@ -69,11 +69,11 @@ objects:
         redundancyPolicy: SingleRedundancy
         resources:
           limits:
-            memory: 16Gi
+            memory: 8Gi
           requests:
-            memory: 16Gi
+            memory: 8Gi
         storage:
-          size: 100G
+          size: 50G
           storageClassName: "${STORAGECLASS}"
       retentionPolicy:
         application:
