@@ -53,10 +53,10 @@ metadata:
 spec:
   # Name of the channel to subscribe to.
   # look for the channel version available by command: 'oc get packagemanifests elasticsearch-operator -o yaml'
-  channel: stable
+  channel: stable-5.7
   # Set the approval strategy to Manual in case your specified version is superseded by a later version in the catalog.
   # This plan prevents an automatic upgrade to a later version and requires manual approval before the starting CSV can complete the installation.
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
   # Name of the Operator to subscribe to
   name: elasticsearch-operator
   # Name of the catalog source that provides the Operator.
