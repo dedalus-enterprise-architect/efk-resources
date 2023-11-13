@@ -57,6 +57,12 @@ Run the following command to install the RedHat ElasticSearch Operator:
    oc apply -f deploy/elasticsearch/es-operator.yml
 ```
 
+Approve the InstallPlan:
+
+```
+oc patch installplan $(oc get ip -n openshift-operators-redhat -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') -n openshift-operators-redhat --type merge --patch '{"spec":{"approved":true}}'
+```
+
 > Check objects
 
 Get a list of the objects created:
