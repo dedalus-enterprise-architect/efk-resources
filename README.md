@@ -51,13 +51,13 @@ Explore the files used by this project:
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-Run the following command to install the RedHat ElasticSearch Operator:
+1. Run the following command to install the _RedHat ElasticSearch Operator_:
 
 ```
    oc apply -f deploy/elasticsearch/es-operator.yml
 ```
 
-Approve the InstallPlan:
+2. Approve the _InstallPlan_:
 
 ```
 oc patch installplan $(oc get ip -n openshift-operators-redhat -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') -n openshift-operators-redhat --type merge --patch '{"spec":{"approved":true}}'
@@ -75,15 +75,19 @@ Get a list of the objects created:
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-Run the following command to install the RedHat OpenShift Cluster Logging Operator:
-
-1. Instanciate the _Cluster Logging Operator_:
+1. Run the following command to install the _RedHat OpenShift Cluster Logging Operator_:
 
 ```
    oc apply -f deploy/clusterlogging/cl-operator.yml -n openshift-logging
 ```
 
-2. Instanciate the _ClusterLogging_ instance with inline parameters:
+2. Approve the _InstallPlan_:
+   
+```
+  oc patch installplan $(oc get ip -n openshift-logging -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') -n openshift-logging --type merge --patch '{"spec":{"approved":true}}'
+```
+
+3. Instanciate the _ClusterLogging_ instance with inline parameters:
 
 ```
    oc process -f deploy/clusterlogging/cl-instance.template.yml \
@@ -91,7 +95,7 @@ Run the following command to install the RedHat OpenShift Cluster Logging Operat
      | oc -n openshift-logging apply -f -
 ```
 
-3. Instanciate the _Cluster Forwarder_:
+4. Instanciate the _Cluster Forwarder_:
 
 ```
    oc apply -f deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
