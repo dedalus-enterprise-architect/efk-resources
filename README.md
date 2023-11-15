@@ -45,7 +45,7 @@ Explore the files used by this project:
 
 * RedHat Operators catalog available on cluster
 
-* Git project local clone
+* A local clone of this git branch 5.7.5 ( --branch option)
 
 ### RedHat ElasticSearch Operator: setup
 
