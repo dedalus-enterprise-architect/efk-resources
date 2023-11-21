@@ -1,6 +1,6 @@
 # OpenShift Logging Resources
 
-This project collects some procedures on how to setup a custom EFK instance based on the following minimum requirements:
+This project collects some procedures on how to setup a custom EFK instance based on the following software versions:
 
  * RedHat OpenShift Cluster Logging Operator - version 5.7.5
 
@@ -39,11 +39,11 @@ Explore the files used by this project:
 
 ### Project minimum requirements
 
-* The OpenShift client utility: ```oc```
+* OpenShift client utility: ```oc```
 
-* A cluster admin roles rights
+* OpenShift cluster admin privileges
 
-* RedHat Operators catalog available on cluster
+* RedHat Operators catalog available on OpenShift cluster
 
 * A local clone of this git branch 5.7.5 ( --branch option)
 
